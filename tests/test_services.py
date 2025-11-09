@@ -7,7 +7,6 @@ from datetime import datetime, timedelta
 from src.models import TaskCreate, TaskUpdate, TaskStatus, TaskPriority
 from src.utils.exceptions import (
     TaskNotFoundException,
-    TaskValidationException,
     DuplicateTaskException,
 )
 
