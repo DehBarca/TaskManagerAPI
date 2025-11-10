@@ -3,7 +3,7 @@ Excepciones personalizadas de la aplicación.
 """
 
 
-class TaskManagerException(Exception):
+class TaskManagerError(Exception):
     """Excepción base para todas las excepciones de la aplicación."""
 
     def __init__(self, message: str, details: dict = None):
@@ -12,7 +12,7 @@ class TaskManagerException(Exception):
         super().__init__(self.message)
 
 
-class TaskNotFoundException(TaskManagerException):
+class TaskNotFoundException(TaskManagerError):
     """Excepción lanzada cuando no se encuentra una tarea."""
 
     def __init__(self, task_id: str):
@@ -20,7 +20,7 @@ class TaskNotFoundException(TaskManagerException):
         super().__init__(message, {"task_id": task_id})
 
 
-class TaskValidationException(TaskManagerException):
+class TaskValidationException(TaskManagerError):
     """Excepción lanzada cuando falla la validación de una tarea."""
 
     def __init__(self, message: str, field: str = None):
@@ -28,7 +28,7 @@ class TaskValidationException(TaskManagerException):
         super().__init__(message, details)
 
 
-class DuplicateTaskException(TaskManagerException):
+class DuplicateTaskException(TaskManagerError):
     """Excepción lanzada cuando se intenta crear una tarea duplicada."""
 
     def __init__(self, title: str):

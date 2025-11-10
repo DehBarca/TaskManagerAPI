@@ -2,12 +2,14 @@
 Configuración de pytest y fixtures compartidos.
 """
 
-import pytest
 from datetime import datetime, timedelta
+
+import pytest
+
 from src.database import Database
+from src.models import Task, TaskCreate, TaskPriority, TaskStatus
 from src.repositories import TaskRepository
 from src.services import TaskService
-from src.models import Task, TaskCreate, TaskStatus, TaskPriority
 
 
 @pytest.fixture

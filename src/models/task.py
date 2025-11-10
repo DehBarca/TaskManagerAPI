@@ -3,27 +3,20 @@ Modelo de datos para Tareas.
 """
 
 from datetime import datetime
-from typing import Optional
+
 from pydantic import BaseModel, Field, validator
-from .enums import TaskStatus, TaskPriority
+
+from .enums import TaskPriority, TaskStatus
 
 
 class TaskBase(BaseModel):
     """Modelo base de tarea con campos comunes."""
 
-    title: str = Field(
-        ..., min_length=1, max_length=200, description="Título de la tarea"
-    )
-    description: Optional[str] = Field(
-        None, max_length=1000, description="Descripción detallada"
-    )
-    priority: TaskPriority = Field(
-        default=TaskPriority.MEDIUM, description="Prioridad de la tarea"
-    )
-    status: TaskStatus = Field(
-        default=TaskStatus.PENDING, description="Estado de la tarea"
-    )
-    due_date: Optional[datetime] = Field(None, description="Fecha de vencimiento")
+    title: str = Field(..., min_length=1, max_length=200, description="Título de la tarea")
+    description: str | None = Field(None, max_length=1000, description="Descripción detallada")
+    priority: TaskPriority = Field(default=TaskPriority.MEDIUM, description="Prioridad de la tarea")
+    status: TaskStatus = Field(default=TaskStatus.PENDING, description="Estado de la tarea")
+    due_date: datetime | None = Field(None, description="Fecha de vencimiento")
 
     @validator("title")
     def title_must_not_be_empty(cls, v):
@@ -49,11 +42,11 @@ class TaskCreate(TaskBase):
 class TaskUpdate(BaseModel):
     """Modelo para actualizar una tarea existente."""
 
-    title: Optional[str] = Field(None, min_length=1, max_length=200)
-    description: Optional[str] = Field(None, max_length=1000)
-    priority: Optional[TaskPriority] = None
-    status: Optional[TaskStatus] = None
-    due_date: Optional[datetime] = None
+    title: str | None = Field(None, min_length=1, max_length=200)
+    description: str | None = Field(None, max_length=1000)
+    priority: TaskPriority | None = None
+    status: TaskStatus | None = None
+    due_date: datetime | None = None
 
     @validator("title")
     def title_must_not_be_empty(cls, v):
@@ -67,9 +60,7 @@ class Task(TaskBase):
     """Modelo completo de tarea incluyendo campos generados."""
 
     id: str = Field(..., description="Identificador único de la tarea")
-    created_at: datetime = Field(
-        default_factory=datetime.now, description="Fecha de creación"
-    )
+    created_at: datetime = Field(default_factory=datetime.now, description="Fecha de creación")
     updated_at: datetime = Field(
         default_factory=datetime.now, description="Fecha de última actualización"
     )

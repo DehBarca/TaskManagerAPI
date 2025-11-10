@@ -18,7 +18,9 @@ El proyecto sigue una arquitectura en capas:
 - ✅ Validación de datos con Pydantic
 - ✅ Manejo de errores personalizado
 - ✅ Logging estructurado
-- ✅ Pruebas unitarias con alta cobertura
+- ✅ Pruebas unitarias con alta cobertura (93%)
+- ✅ Integración con SonarQube para análisis de calidad
+- ✅ CI/CD con GitHub Actions
 - ✅ Documentación automática con Swagger
 - ✅ Configuración mediante variables de entorno
 
@@ -70,6 +72,30 @@ Con cobertura:
 ```bash
 pytest --cov=src --cov-report=html
 ```
+
+Con cobertura en formato XML (para SonarQube):
+```bash
+pytest --cov=src --cov-report=xml --cov-report=html
+```
+
+## 🔍 Análisis de Calidad con SonarQube
+
+Este proyecto está integrado con SonarQube para análisis continuo de calidad de código.
+
+### Análisis Local
+
+```powershell
+# Ejecutar análisis completo con un solo comando
+.\run-sonar-local.ps1
+```
+
+### Más información
+
+Ver [SONARQUBE.md](SONARQUBE.md) para instrucciones detalladas sobre:
+- Instalación y configuración de SonarQube
+- Ejecución de análisis locales
+- Configuración en GitHub Actions
+- Interpretación de métricas y resultados
 
 ## 📚 API Endpoints
 

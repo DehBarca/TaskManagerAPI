@@ -24,3 +24,70 @@ exclude_lines = [
     "raise NotImplementedError",
     "if __name__ == .__main__.:",
 ]
+
+# ═══════════════════════════════════════════════════════════════
+# Configuración de Ruff (linter moderno y rápido)
+# ═══════════════════════════════════════════════════════════════
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+# Excluir archivos/carpetas
+exclude = [
+    ".git",
+    ".pytest_cache",
+    "__pycache__",
+    "venv",
+    "env",
+    ".venv",
+    "htmlcov",
+    ".coverage",
+]
+
+# Formato de salida para reportes
+output-format = "json"
+
+[tool.ruff.lint]
+# Reglas a verificar (ampliadas para mejor calidad de código)
+select = [
+    "E",    # pycodestyle errors (errores de estilo PEP 8)
+    "W",    # pycodestyle warnings (advertencias PEP 8)
+    "F",    # pyflakes (errores lógicos, imports no usados)
+    "I",    # isort (ordenamiento de imports)
+    "B",    # flake8-bugbear (bugs comunes y anti-patrones)
+    "C4",   # flake8-comprehensions (mejoras en comprensiones)
+    "UP",   # pyupgrade (sintaxis moderna de Python)
+    "N",    # pep8-naming (convenciones de nombres)
+    "C90",  # mccabe (complejidad ciclomática)
+    "T20",  # flake8-print (detectar prints olvidados)
+    "SIM",  # flake8-simplify (simplificación de código)
+    "RET",  # flake8-return (mejoras en returns)
+    "ARG",  # flake8-unused-arguments (argumentos no usados)
+]
+
+# Reglas a ignorar (con justificación)
+ignore = [
+    "E501",   # line-too-long (el formatter lo maneja)
+    "B008",   # function-call-in-default-argument (usado en FastAPI)
+    "C901",   # complex-structure (permitir algo de complejidad)
+    "T201",   # print (permitir prints en desarrollo)
+    "S101",   # assert (usado en tests)
+    "S104",   # hardcoded-bind-all-interfaces (usado en desarrollo)
+    "S105",   # hardcoded-password-string (falsos positivos)
+    "S106",   # hardcoded-password-func-arg (falsos positivos)
+    "N818",   # exception-name (permitir Exception en vez de Error)
+]
+
+# Configuración de complejidad
+[tool.ruff.lint.mccabe]
+max-complexity = 10  # Limitar complejidad ciclomática
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401"]  # Ignorar imports no usados en __init__
+"src/models/task.py" = ["N805"]  # Pydantic validators usan cls, no self
+"src/utils/exceptions.py" = ["N818"]  # Permitir Exception en vez de Error
+"tests/*.py" = ["F401", "F811"]  # Más flexible en tests
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"

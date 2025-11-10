@@ -3,15 +3,15 @@ Paquete de utilidades.
 """
 
 from .exceptions import (
-    TaskManagerException,
+    DuplicateTaskException,
+    TaskManagerError,
     TaskNotFoundException,
     TaskValidationException,
-    DuplicateTaskException,
 )
 from .logger import get_logger
 
 __all__ = [
-    "TaskManagerException",
+    "TaskManagerError",
     "TaskNotFoundException",
     "TaskValidationException",
     "DuplicateTaskException",

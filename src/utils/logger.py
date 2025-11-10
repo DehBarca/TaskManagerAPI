@@ -4,7 +4,7 @@ Configuración del sistema de logging.
 
 import logging
 import sys
-from typing import Optional
+
 from ..config import settings
 
 
@@ -18,7 +18,7 @@ def setup_logging():
     )
 
 
-def get_logger(name: Optional[str] = None) -> logging.Logger:
+def get_logger(name: str | None = None) -> logging.Logger:
     """
     Obtiene un logger configurado.
 
@@ -31,5 +31,4 @@ def get_logger(name: Optional[str] = None) -> logging.Logger:
     if name is None:
         name = __name__
 
-    logger = logging.getLogger(name)
-    return logger
+    return logging.getLogger(name)

@@ -3,8 +3,10 @@ Dependencias de FastAPI para inyección de dependencias.
 """
 
 from typing import Annotated
+
 from fastapi import Depends
-from ..database import get_database, Database
+
+from ..database import Database, get_database
 from ..repositories import TaskRepository
 from ..services import TaskService
 

@@ -4,8 +4,8 @@ Carga las variables de entorno y proporciona acceso a la configuración.
 """
 
 import os
-from typing import Optional
 from pathlib import Path
+
 from dotenv import load_dotenv
 
 # Cargar variables de entorno
@@ -33,7 +33,7 @@ class Settings:
     LOG_LEVEL: str = os.getenv("LOG_LEVEL", "INFO")
 
     @classmethod
-    def get_database_path(cls) -> Optional[Path]:
+    def get_database_path(cls) -> Path | None:
         """Obtiene la ruta del archivo de base de datos SQLite."""
         if cls.DATABASE_URL.startswith("sqlite:///"):
             db_path = cls.DATABASE_URL.replace("sqlite:///", "")

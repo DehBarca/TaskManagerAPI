@@ -4,9 +4,10 @@ Punto de entrada de la aplicación Task Manager.
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from .config import settings
+
 from .api import router as task_router
-from .utils.logger import setup_logging, get_logger
+from .config import settings
+from .utils.logger import get_logger, setup_logging
 
 # Configurar logging
 setup_logging()
@@ -58,9 +59,7 @@ async def health_check():
 async def startup_event():
     """Evento ejecutado al iniciar la aplicación."""
     logger.info(f"Iniciando {settings.APP_NAME} v{settings.APP_VERSION}")
-    logger.info(
-        f"Documentación disponible en: http://{settings.API_HOST}:{settings.API_PORT}/docs"
-    )
+    logger.info(f"Documentación disponible en: http://{settings.API_HOST}:{settings.API_PORT}/docs")
 
 
 @app.on_event("shutdown")

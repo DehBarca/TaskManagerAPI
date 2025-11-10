@@ -2,12 +2,14 @@
 Pruebas unitarias para los servicios.
 """
 
-import pytest
 from datetime import datetime, timedelta
-from src.models import TaskCreate, TaskUpdate, TaskStatus, TaskPriority
+
+import pytest
+
+from src.models import TaskCreate, TaskPriority, TaskStatus, TaskUpdate
 from src.utils.exceptions import (
-    TaskNotFoundException,
     DuplicateTaskException,
+    TaskNotFoundException,
 )
 
 
@@ -32,9 +34,7 @@ class TestTaskService:
         from pydantic import ValidationError
 
         with pytest.raises(ValidationError):
-            task_data = TaskCreate(
-                title="Tarea", due_date=datetime.now() - timedelta(days=1)
-            )
+            TaskCreate(title="Tarea", due_date=datetime.now() - timedelta(days=1))
 
     def test_create_duplicate_task_fails(self, task_service, sample_task_data):
         """Prueba que falla al crear una tarea duplicada."""
@@ -74,9 +74,7 @@ class TestTaskService:
         """Prueba actualizar una tarea."""
         created_task = task_service.create_task(sample_task_data)
 
-        update_data = TaskUpdate(
-            title="Título Actualizado", status=TaskStatus.IN_PROGRESS
-        )
+        update_data = TaskUpdate(title="Título Actualizado", status=TaskStatus.IN_PROGRESS)
         updated_task = task_service.update_task(created_task.id, update_data)
 
         assert updated_task.title == "Título Actualizado"
@@ -94,7 +92,7 @@ class TestTaskService:
         task1_data = TaskCreate(title="Tarea 1")
         task2_data = TaskCreate(title="Tarea 2")
 
-        task1 = task_service.create_task(task1_data)
+        task_service.create_task(task1_data)
         task2 = task_service.create_task(task2_data)
 
         update_data = TaskUpdate(title="Tarea 1")
@@ -127,12 +125,8 @@ class TestTaskService:
     def test_get_statistics(self, task_service):
         """Prueba obtener estadísticas de tareas."""
         # Crear varias tareas
-        task1 = TaskCreate(
-            title="Tarea 1", status=TaskStatus.PENDING, priority=TaskPriority.HIGH
-        )
-        task2 = TaskCreate(
-            title="Tarea 2", status=TaskStatus.COMPLETED, priority=TaskPriority.LOW
-        )
+        task1 = TaskCreate(title="Tarea 1", status=TaskStatus.PENDING, priority=TaskPriority.HIGH)
+        task2 = TaskCreate(title="Tarea 2", status=TaskStatus.COMPLETED, priority=TaskPriority.LOW)
 
         task_service.create_task(task1)
         task_service.create_task(task2)

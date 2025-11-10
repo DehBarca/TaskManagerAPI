@@ -2,24 +2,26 @@
 Definición de rutas de la API REST.
 """
 
-from typing import List, Annotated
+from typing import Annotated
+
 from fastapi import APIRouter, Depends, HTTPException, status
-from ..models import Task, TaskCreate, TaskUpdate, TaskStatus
+
+from ..models import Task, TaskCreate, TaskStatus, TaskUpdate
 from ..services import TaskService
 from ..utils.exceptions import (
+    DuplicateTaskException,
     TaskNotFoundException,
     TaskValidationException,
-    DuplicateTaskException,
 )
 from .dependencies import get_task_service
 
 router = APIRouter(prefix="/tasks", tags=["tasks"])
 
 
-@router.get("/", response_model=List[Task], summary="Listar todas las tareas")
+@router.get("/", response_model=list[Task], summary="Listar todas las tareas")
 async def get_all_tasks(
     service: Annotated[TaskService, Depends(get_task_service)],
-) -> List[Task]:
+) -> list[Task]:
     """
     Obtiene todas las tareas del sistema.
 
@@ -48,17 +50,17 @@ async def get_task(
     try:
         return service.get_task_by_id(task_id)
     except TaskNotFoundException as e:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=e.message)
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=e.message) from e
 
 
 @router.get(
     "/status/{task_status}",
-    response_model=List[Task],
+    response_model=list[Task],
     summary="Filtrar tareas por estado",
 )
 async def get_tasks_by_status(
     task_status: TaskStatus, service: Annotated[TaskService, Depends(get_task_service)]
-) -> List[Task]:
+) -> list[Task]:
     """
     Obtiene tareas filtradas por estado.
 
@@ -95,7 +97,7 @@ async def create_task(
     try:
         return service.create_task(task_data)
     except (DuplicateTaskException, TaskValidationException) as e:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=e.message)
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=e.message) from e
 
 
 @router.put("/{task_id}", response_model=Task, summary="Actualizar una tarea")
@@ -120,17 +122,13 @@ async def update_task(
     try:
         return service.update_task(task_id, task_data)
     except TaskNotFoundException as e:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=e.message)
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=e.message) from e
     except (DuplicateTaskException, TaskValidationException) as e:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=e.message)
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=e.message) from e
 
 
-@router.delete(
-    "/{task_id}", status_code=status.HTTP_204_NO_CONTENT, summary="Eliminar una tarea"
-)
-async def delete_task(
-    task_id: str, service: Annotated[TaskService, Depends(get_task_service)]
-):
+@router.delete("/{task_id}", status_code=status.HTTP_204_NO_CONTENT, summary="Eliminar una tarea")
+async def delete_task(task_id: str, service: Annotated[TaskService, Depends(get_task_service)]):
     """
     Elimina una tarea.
 
@@ -143,12 +141,10 @@ async def delete_task(
     try:
         service.delete_task(task_id)
     except TaskNotFoundException as e:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=e.message)
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=e.message) from e
 
 
-@router.patch(
-    "/{task_id}/complete", response_model=Task, summary="Marcar tarea como completada"
-)
+@router.patch("/{task_id}/complete", response_model=Task, summary="Marcar tarea como completada")
 async def complete_task(
     task_id: str, service: Annotated[TaskService, Depends(get_task_service)]
 ) -> Task:
@@ -167,7 +163,7 @@ async def complete_task(
     try:
         return service.complete_task(task_id)
     except TaskNotFoundException as e:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=e.message)
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=e.message) from e
 
 
 @router.get("/analytics/statistics", summary="Obtener estadísticas")

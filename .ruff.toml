@@ -1,0 +1,155 @@
+# ═══════════════════════════════════════════════════════════════
+# Configuración de Ruff - Linter Moderno para Python
+# ═══════════════════════════════════════════════════════════════
+# Documentación: https://docs.astral.sh/ruff/
+
+# Configuración básica
+line-length = 100
+target-version = "py311"
+indent-width = 4
+
+# Archivos y carpetas a excluir
+exclude = [
+    ".git",
+    ".pytest_cache",
+    ".ruff_cache",
+    "__pycache__",
+    "venv",
+    "env",
+    ".venv",
+    "htmlcov",
+    ".coverage",
+    "*.egg-info",
+    "dist",
+    "build",
+]
+
+[lint]
+# ═══════════════════════════════════════════════════════════════
+# REGLAS DE LINTING
+# ═══════════════════════════════════════════════════════════════
+
+# Reglas activas
+select = [
+    # Errores de sintaxis y PEP 8
+    "E",    # pycodestyle errors
+    "W",    # pycodestyle warnings
+    "F",    # pyflakes (errores lógicos)
+    
+    # Organización de código
+    "I",    # isort (ordenamiento de imports)
+    "N",    # pep8-naming (convenciones de nombres)
+    
+    # Detección de bugs y anti-patrones
+    "B",    # flake8-bugbear
+    "C4",   # flake8-comprehensions
+    "SIM",  # flake8-simplify
+    
+    # Modernización de código
+    "UP",   # pyupgrade (sintaxis moderna)
+    
+    # Complejidad
+    "C90",  # mccabe (complejidad ciclomática)
+    
+    # Mejoras de código
+    "RET",  # flake8-return
+    "ARG",  # flake8-unused-arguments
+    "PTH",  # flake8-use-pathlib
+    
+    # Seguridad
+    "S",    # flake8-bandit (seguridad)
+    
+    # Debugging
+    "T20",  # flake8-print (detectar prints)
+]
+
+# Reglas ignoradas (con justificación)
+ignore = [
+    "E501",   # line-too-long (el formatter lo maneja)
+    "B008",   # function-call-in-default-argument (usado en FastAPI)
+    "C901",   # complex-structure (permitir algo de complejidad)
+    "T201",   # print (permitir prints en desarrollo)
+    "S101",   # assert (usado en tests)
+    "S104",   # hardcoded-bind-all-interfaces (usado en desarrollo)
+    "S105",   # hardcoded-password-string (falsos positivos)
+    "S106",   # hardcoded-password-func-arg (falsos positivos)
+]
+
+# Configuración por archivo
+[lint.per-file-ignores]
+"__init__.py" = ["F401"]           # Imports no usados en __init__
+"src/models/task.py" = ["N805"]    # Pydantic validators usan cls, no self
+"src/utils/exceptions.py" = ["N818"]  # Permitir Exception en vez de Error
+"tests/*.py" = [
+    "F401",                         # Imports no usados
+    "F811",                         # Redefinición de función
+    "S101",                         # Uso de assert
+    "ARG",                          # Argumentos no usados en fixtures
+]
+
+# Configuración de complejidad ciclomática
+[lint.mccabe]
+max-complexity = 10
+
+# Configuración de isort (ordenamiento de imports)
+[lint.isort]
+known-first-party = ["src"]
+force-sort-within-sections = true
+split-on-trailing-comma = true
+
+# Configuración de pep8-naming
+[lint.pep8-naming]
+classmethod-decorators = ["classmethod"]
+
+# ═══════════════════════════════════════════════════════════════
+# FORMATEO DE CÓDIGO
+# ═══════════════════════════════════════════════════════════════
+[format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
+
+# ═══════════════════════════════════════════════════════════════
+# CATEGORÍAS DE REGLAS DISPONIBLES
+# ═══════════════════════════════════════════════════════════════
+# A    flake8-annotations
+# ANN  flake8-annotations
+# ARG  flake8-unused-arguments
+# B    flake8-bugbear
+# BLE  flake8-blind-except
+# C4   flake8-comprehensions
+# C90  mccabe
+# COM  flake8-commas
+# D    pydocstyle
+# DTZ  flake8-datetimez
+# E    pycodestyle errors
+# EM   flake8-errmsg
+# ERA  eradicate
+# EXE  flake8-executable
+# F    pyflakes
+# FBT  flake8-boolean-trap
+# I    isort
+# ICN  flake8-import-conventions
+# ISC  flake8-implicit-str-concat
+# N    pep8-naming
+# PD   pandas-vet
+# PGH  pygrep-hooks
+# PIE  flake8-pie
+# PL   pylint
+# PT   flake8-pytest-style
+# PTH  flake8-use-pathlib
+# Q    flake8-quotes
+# RET  flake8-return
+# RSE  flake8-raise
+# RUF  ruff-specific rules
+# S    flake8-bandit
+# SIM  flake8-simplify
+# T10  flake8-debugger
+# T20  flake8-print
+# TCH  flake8-type-checking
+# TID  flake8-tidy-imports
+# TRY  tryceratops
+# UP   pyupgrade
+# W    pycodestyle warnings
+# YTT  flake8-2020

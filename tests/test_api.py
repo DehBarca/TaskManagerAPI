@@ -2,12 +2,14 @@
 Pruebas de integración para la API REST.
 """
 
-import pytest
-from fastapi.testclient import TestClient
 from datetime import datetime, timedelta
-from src.main import app
+
+from fastapi.testclient import TestClient
+import pytest
+
 from src.database import get_database
-from src.models import TaskStatus, TaskPriority
+from src.main import app
+from src.models import TaskPriority, TaskStatus
 
 
 @pytest.fixture

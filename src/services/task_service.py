@@ -3,15 +3,15 @@ Servicio de lógica de negocio para tareas.
 Contiene toda la lógica de negocio relacionada con tareas.
 """
 
-from typing import List, Optional
 from datetime import datetime
 import uuid
-from ..models import Task, TaskCreate, TaskUpdate, TaskStatus
+
+from ..models import Task, TaskCreate, TaskStatus, TaskUpdate
 from ..repositories import TaskRepository
 from ..utils.exceptions import (
+    DuplicateTaskException,
     TaskNotFoundException,
     TaskValidationException,
-    DuplicateTaskException,
 )
 from ..utils.logger import get_logger
 
@@ -30,7 +30,7 @@ class TaskService:
         """
         self.repository = repository
 
-    def get_all_tasks(self) -> List[Task]:
+    def get_all_tasks(self) -> list[Task]:
         """
         Obtiene todas las tareas ordenadas por fecha de creación.
 
@@ -63,7 +63,7 @@ class TaskService:
             raise TaskNotFoundException(task_id)
         return task
 
-    def get_tasks_by_status(self, status: TaskStatus) -> List[Task]:
+    def get_tasks_by_status(self, status: TaskStatus) -> list[Task]:
         """
         Obtiene tareas filtradas por estado.
 
@@ -147,12 +147,15 @@ class TaskService:
             if other_task and other_task.id != task_id:
                 raise DuplicateTaskException(update_data["title"])
 
-        if "due_date" in update_data and update_data["due_date"]:
-            if update_data["due_date"] < datetime.now():
-                raise TaskValidationException(
-                    "La fecha de vencimiento no puede ser en el pasado",
-                    field="due_date",
-                )
+        if (
+            "due_date" in update_data
+            and update_data["due_date"]
+            and update_data["due_date"] < datetime.now()
+        ):
+            raise TaskValidationException(
+                "La fecha de vencimiento no puede ser en el pasado",
+                field="due_date",
+            )
 
         # Aplicar actualizaciones
         for key, value in update_data.items():
@@ -228,16 +231,10 @@ class TaskService:
 
             # Contar por prioridad
             priority_key = task.priority.value
-            stats["by_priority"][priority_key] = (
-                stats["by_priority"].get(priority_key, 0) + 1
-            )
+            stats["by_priority"][priority_key] = stats["by_priority"].get(priority_key, 0) + 1
 
             # Contar vencidas
-            if (
-                task.due_date
-                and task.due_date < now
-                and task.status != TaskStatus.COMPLETED
-            ):
+            if task.due_date and task.due_date < now and task.status != TaskStatus.COMPLETED:
                 stats["overdue"] += 1
 
         return stats

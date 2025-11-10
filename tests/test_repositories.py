@@ -2,9 +2,11 @@
 Pruebas unitarias para los repositorios.
 """
 
-import pytest
 from datetime import datetime, timedelta
-from src.models import Task, TaskStatus, TaskPriority
+
+import pytest
+
+from src.models import Task, TaskPriority, TaskStatus
 
 
 class TestTaskRepository:

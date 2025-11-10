@@ -2,10 +2,12 @@
 Pruebas unitarias para los modelos de datos.
 """
 
-import pytest
 from datetime import datetime, timedelta
+
 from pydantic import ValidationError
-from src.models import Task, TaskCreate, TaskUpdate, TaskStatus, TaskPriority
+import pytest
+
+from src.models import Task, TaskCreate, TaskPriority, TaskStatus, TaskUpdate
 
 
 class TestTaskEnums:

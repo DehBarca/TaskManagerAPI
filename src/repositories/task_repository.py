@@ -3,10 +3,10 @@ Repositorio para el acceso a datos de tareas.
 Implementa el patrón Repository para abstraer la capa de persistencia.
 """
 
-from typing import List, Optional, Dict, Any
 from datetime import datetime
-from ..models import Task, TaskStatus
+
 from ..database import Database
+from ..models import Task, TaskStatus
 from ..utils.logger import get_logger
 
 logger = get_logger(__name__)
@@ -26,7 +26,7 @@ class TaskRepository:
         """
         self.db = database
 
-    def find_all(self) -> List[Task]:
+    def find_all(self) -> list[Task]:
         """
         Obtiene todas las tareas.
 
@@ -38,7 +38,7 @@ class TaskRepository:
         logger.info(f"Se encontraron {len(tasks)} tareas")
         return tasks
 
-    def find_by_id(self, task_id: str) -> Optional[Task]:
+    def find_by_id(self, task_id: str) -> Task | None:
         """
         Busca una tarea por su ID.
 
@@ -55,7 +55,7 @@ class TaskRepository:
         logger.debug(f"Tarea no encontrada: {task_id}")
         return None
 
-    def find_by_status(self, status: TaskStatus) -> List[Task]:
+    def find_by_status(self, status: TaskStatus) -> list[Task]:
         """
         Busca tareas por estado.
 
@@ -67,12 +67,10 @@ class TaskRepository:
         """
         all_tasks = self.find_all()
         filtered_tasks = [task for task in all_tasks if task.status == status]
-        logger.info(
-            f"Se encontraron {len(filtered_tasks)} tareas con estado '{status}'"
-        )
+        logger.info(f"Se encontraron {len(filtered_tasks)} tareas con estado '{status}'")
         return filtered_tasks
 
-    def find_by_title(self, title: str) -> Optional[Task]:
+    def find_by_title(self, title: str) -> Task | None:
         """
         Busca una tarea por título exacto.
 
